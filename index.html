@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+  <title>Star Hopper: Cosmic Drift</title>
+  <meta name="theme-color" content="#0b1225" />
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div id="app">
+    <canvas id="game"></canvas>
+
+    <div id="topBar">
+      <div class="badgeRow left">
+        <div class="badge" id="scoreBadge">Score: 0</div>
+        <div class="badge" id="bestBadge">Best: 0</div>
+        <div class="badge" id="coinsBadge">Credits: 0</div>
+      </div>
+      <div class="badgeRow right">
+        <div class="badge" id="shieldBadge">Shields: 0</div>
+        <div class="badge" id="stageBadge">Sector 1</div>
+        <div class="badge" id="powerBadge">Cruise</div>
+      </div>
+    </div>
+
+    <div id="hudControls" role="group" aria-label="Game controls">
+      <button id="shopHudBtn" class="hud-btn" type="button" title="Shop" aria-label="Open shop">🛒</button>
+      <button id="resetBtn" class="hud-btn" type="button" title="Reset run" aria-label="Reset run">↻</button>
+      <button id="pauseBtn" class="hud-btn" type="button" title="Pause" aria-label="Pause game" aria-pressed="false">⏸</button>
+      <button id="muteBtn" class="hud-btn" type="button" title="Mute" aria-label="Mute audio" aria-pressed="false">🔊</button>
+    </div>
+
+    <div id="homePanel" class="panel">
+      <div class="panelChip">Arcade Space Edition</div>
+      <h1>Star Hopper</h1>
+      <p class="lead">An upgraded space runner with asteroid gates, star credits, shields, shop unlocks, daily rewards, and challenge sectors every 25 points.</p>
+      <div class="heroStats">
+        <div><strong id="homeBest">0</strong><span>Best</span></div>
+        <div><strong id="homeCoins">0</strong><span>Credits</span></div>
+        <div><strong id="homeStage">1</strong><span>Highest Sector</span></div>
+      </div>
+      <div class="actions">
+        <button id="playBtn" class="primary-btn" type="button">Launch</button>
+        <button id="openShopBtn" class="secondary-btn" type="button">Shop</button>
+        <button id="openSettingsBtn" class="secondary-btn" type="button">Settings</button>
+      </div>
+      <div class="actions wrapTop">
+        <button id="claimDailyBtn" class="reward-btn" type="button">Claim Daily Reward</button>
+        <button id="howToBtn" class="secondary-btn" type="button">How to Play</button>
+        <button id="creditsBtn" class="secondary-btn" type="button">Credits</button>
+      </div>
+      <p class="small">Tap anywhere or press Launch to start. Challenge sectors unlock every 25 points with new hazards.</p>
+    </div>
+
+    <div id="gameOverPanel" class="panel hidden">
+      <div class="panelChip">Run Complete</div>
+      <h2>Mission Ended</h2>
+      <p class="lead" id="gameOverLead">Good flight, pilot.</p>
+      <div class="heroStats compact">
+        <div><strong id="finalScore">0</strong><span>Score</span></div>
+        <div><strong id="finalBest">0</strong><span>Best</span></div>
+        <div><strong id="finalCoins">0</strong><span>Credits Won</span></div>
+      </div>
+      <div class="actions">
+        <button id="replayBtn" class="primary-btn" type="button">Launch Again</button>
+        <button id="goShopBtn" class="secondary-btn" type="button">Shop</button>
+        <button id="goMenuBtn" class="secondary-btn" type="button">Main Menu</button>
+      </div>
+    </div>
+
+    <div id="modalBackdrop" class="modal hidden" aria-hidden="true">
+      <div class="modalCard">
+        <div class="modalHeader">
+          <div>
+            <div class="panelChip" id="modalChip">Menu</div>
+            <h3 id="modalTitle">Title</h3>
+            <p id="modalSubtitle">Subtitle</p>
+          </div>
+          <button id="closeModalBtn" class="icon-close" type="button" aria-label="Close">✕</button>
+        </div>
+        <div id="modalBody"></div>
+      </div>
+    </div>
+
+    <div id="statusMessage" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+
+    <audio id="bgm" preload="auto" loop playsinline webkit-playsinline="true">
+      <source src="./audio/space_loop.wav" type="audio/wav" />
+    </audio>
+  </div>
+
+  <script src="./game.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js').catch(() => {}));
+    }
+  </script>
+</body>
+</html>

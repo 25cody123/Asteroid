@@ -1,0 +1,17 @@
+{
+  "name": "Star Hopper: Cosmic Drift",
+  "short_name": "Star Hopper",
+  "start_url": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0b1225",
+  "theme_color": "#0b1225",
+  "icons": [
+    {
+      "src": "./assets/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
