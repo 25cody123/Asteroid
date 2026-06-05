@@ -1,4 +1,4 @@
-const CACHE_NAME = "star-hopper-cosmic-v1";
+const CACHE_NAME = "star-hopper-cosmic-v2-tight-hitboxes";
 const FILES = [
   "./",
   "./index.html",

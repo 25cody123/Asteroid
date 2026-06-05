@@ -475,9 +475,11 @@
             <stop offset="100%" stop-color="${p.body2}"/>
           </linearGradient>
         </defs>
-        <path d="M28 66 Q84 18 144 56 Q126 72 120 92 Q92 98 28 66 Z" fill="url(#${id}-ship)" stroke="${p.accent}" stroke-width="5"/>
-        <circle cx="94" cy="58" r="14" fill="#0f172a" stroke="${p.accent}" stroke-width="4"/>
-        <path d="M23 66 L8 54 L10 78 Z" fill="${p.flame}"/>
+        <path d="M24 60 Q66 24 112 26 L148 60 L112 94 Q66 96 24 60 Z" fill="url(#${id}-ship)" stroke="${p.accent}" stroke-width="5"/>
+        <path d="M56 42 L34 26 L42 54 Z" fill="${p.body2}" stroke="${p.accent}" stroke-width="3"/>
+        <path d="M56 78 L34 94 L42 66 Z" fill="${p.body2}" stroke="${p.accent}" stroke-width="3"/>
+        <circle cx="92" cy="60" r="12" fill="#0f172a" stroke="${p.accent}" stroke-width="4"/>
+        <path d="M20 60 L6 48 L6 72 Z" fill="${p.flame}"/>
       </svg>`;
   }
 
@@ -728,8 +730,8 @@
         updateHud();
         handleStageProgression();
       }
-      const topRect = { x: pipe.x + 10, y: 0, w: game.pipeWidth - 20, h: top };
-      const bottomRect = { x: pipe.x + 10, y: bottomY, w: game.pipeWidth - 20, h: H - bottomY - 58 };
+      const topRect = { x: pipe.x + 16, y: 0, w: game.pipeWidth - 32, h: Math.max(0, top - 18) };
+      const bottomRect = { x: pipe.x + 16, y: bottomY + 18, w: game.pipeWidth - 32, h: Math.max(0, H - bottomY - 76) };
       if (rectsOverlap(bb, topRect) || rectsOverlap(bb, bottomRect)) { useShieldOrEnd(); if (state !== "playing") return; }
     }
     game.pipes = game.pipes.filter(p => p.x + game.pipeWidth > -140);
@@ -884,41 +886,83 @@
     ctx.rotate(ship.rot);
     if (invincibleTimer > 0 && Math.floor(invincibleTimer * 14) % 2 === 0) ctx.globalAlpha = 0.42;
 
-    const bodyGrad = ctx.createLinearGradient(-24, 0, 28, 0);
-    bodyGrad.addColorStop(0, p.body1); bodyGrad.addColorStop(1, p.body2);
+    const bodyGrad = ctx.createLinearGradient(-30, 0, 40, 0);
+    bodyGrad.addColorStop(0, p.body1);
+    bodyGrad.addColorStop(1, p.body2);
+
+    // Main fuselage - more pointy rocket silhouette.
     ctx.fillStyle = bodyGrad;
     ctx.strokeStyle = p.accent;
     ctx.lineWidth = 3;
     ctx.beginPath();
-    ctx.moveTo(-24, 4);
-    ctx.quadraticCurveTo(-8, -22, 24, -10);
-    ctx.quadraticCurveTo(32, 0, 26, 10);
-    ctx.quadraticCurveTo(-4, 18, -24, 4);
-    ctx.closePath(); ctx.fill(); ctx.stroke();
+    ctx.moveTo(-30, 0);
+    ctx.quadraticCurveTo(-10, -26, 18, -18);
+    ctx.lineTo(38, 0);
+    ctx.lineTo(18, 18);
+    ctx.quadraticCurveTo(-10, 26, -30, 0);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
 
+    // Rear fins.
+    ctx.fillStyle = p.body2;
+    ctx.beginPath();
+    ctx.moveTo(-10, -12);
+    ctx.lineTo(-28, -22);
+    ctx.lineTo(-18, -4);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(-10, 12);
+    ctx.lineTo(-28, 22);
+    ctx.lineTo(-18, 4);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+
+    // Cockpit.
     ctx.fillStyle = "#0f172a";
-    ctx.beginPath(); ctx.arc(8, -2, 10, 0, Math.PI * 2); ctx.fill();
-    ctx.strokeStyle = p.accent; ctx.lineWidth = 2; ctx.stroke();
+    ctx.beginPath();
+    ctx.ellipse(6, 0, 10, 8, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = p.accent;
+    ctx.lineWidth = 2;
+    ctx.stroke();
 
+    // Nose highlight.
+    ctx.fillStyle = "rgba(255,255,255,.34)";
+    ctx.beginPath();
+    ctx.moveTo(6, -8);
+    ctx.lineTo(28, -2);
+    ctx.lineTo(10, 2);
+    ctx.closePath();
+    ctx.fill();
+
+    // Engine flame.
     ctx.fillStyle = p.flame;
     ctx.beginPath();
-    ctx.moveTo(-24, 4);
-    ctx.lineTo(-42 - Math.random()*4, -4);
-    ctx.lineTo(-38, 14);
-    ctx.closePath(); ctx.fill();
-
-    ctx.fillStyle = "rgba(255,255,255,.55)";
-    ctx.beginPath(); ctx.ellipse(-4, 8, 12, 5, -0.3, 0, Math.PI * 2); ctx.fill();
+    ctx.moveTo(-30, 0);
+    ctx.lineTo(-46 - Math.random() * 4, -7);
+    ctx.lineTo(-44, 0);
+    ctx.lineTo(-46 - Math.random() * 4, 7);
+    ctx.closePath();
+    ctx.fill();
 
     if (magnetTimer > 0) {
       ctx.strokeStyle = "rgba(244,114,182,.55)";
       ctx.lineWidth = 3;
-      ctx.beginPath(); ctx.arc(0, 0, 34 + Math.sin(performance.now()*0.012)*4, 0, Math.PI*2); ctx.stroke();
+      ctx.beginPath();
+      ctx.arc(0, 0, 34 + Math.sin(performance.now() * 0.012) * 4, 0, Math.PI * 2);
+      ctx.stroke();
     }
     if (shields > 0) {
       ctx.strokeStyle = "rgba(125,211,252,.8)";
       ctx.lineWidth = 3;
-      ctx.beginPath(); ctx.arc(0, 0, 40, 0, Math.PI * 2); ctx.stroke();
+      ctx.beginPath();
+      ctx.arc(0, 0, 40, 0, Math.PI * 2);
+      ctx.stroke();
     }
     ctx.restore();
   }
